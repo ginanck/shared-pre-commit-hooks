@@ -1,0 +1,79 @@
+# Ansible Lint Configuration
+---
+# List of additional rules directories to search for rules
+rulesdir: []
+# List of files to skip
+skip_list:
+  - yaml[line-length] # Allow longer lines for readability
+  - name[casing] # Allow various naming conventions
+  - schema[playbook] # Skip become_method FQCN validation
+  - var-naming # Allow flexible variable naming patterns
+
+# Exclude specific paths
+exclude_paths:
+  - .cache/
+  - .github/
+  - collections/
+  - roles/
+  - molecule/
+  - fact_cache/
+  - vault/
+  - tmp/
+  - todo/
+  - "*.enc"
+
+# Use specific Ansible version for compatibility
+# supported_ansible_also: ["2.12", "2.13", "2.14"]
+
+# Enable offline mode
+offline: false
+
+# Progressive mode - only show new issues
+progressive: false
+
+# Skip action validation for custom modules
+skip_action_validation: true
+
+# Set the default verbosity (0 = quiet, 1 = normal, 2 = verbose)
+verbosity: 0
+
+# Enable specific rules
+enable_list:
+  - no-changed-when
+  - no-handler
+  - no-jinja-when
+  - no-tabs
+
+# Use tags to organize rules
+use_default_rules: true
+
+# Warn on risky file permissions
+warn_list:
+  - risky-file-permissions
+
+# Mock modules for testing
+mock_modules:
+  - community.general.nmcli
+  - community.general.timezone
+  - pve_configure_groups
+  - proxmox_auth
+  - proxmox_version
+
+# Mock roles for testing
+mock_roles:
+  - mocked_role
+
+# Ansible configuration
+kinds:
+  - playbook: "*.yml"
+  - playbook: "*.yaml"
+  - tasks: "**/tasks/*.yml"
+  - tasks: "**/tasks/*.yaml"
+  - handlers: "**/handlers/*.yml"
+  - handlers: "**/handlers/*.yaml"
+  - vars: "**/vars/*.yml"
+  - vars: "**/vars/*.yaml"
+  - meta: "**/meta/main.yml"
+  - meta: "**/meta/main.yaml"
+  - requirements: "**/meta/requirements.yml"
+  - requirements: "**/meta/requirements.yaml"

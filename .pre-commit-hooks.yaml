@@ -1,0 +1,63 @@
+# ==================== SECURITY HOOKS ====================
+- id: gitleaks
+  name: GitLeaks Security Scan
+  entry: gitleaks
+  language: system
+  args: ["detect", "--source", ".", "--verbose"]
+  pass_filenames: false
+  always_run: true
+
+# ==================== ANSIBLE HOOKS ====================
+- id: ansible-lint
+  name: Ansible Lint
+  entry: ansible-lint
+  language: system
+  args: [-c, configs/ansible/ansible-lint.yml, -q]
+  files: \.(yaml|yml)$
+  types: [file]
+  exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*)
+
+- id: yamllint
+  name: YAML Lint
+  entry: yamllint
+  language: system
+  args: [-c, configs/ansible/yamllint.yml]
+  files: \.(yaml|yml)$
+  types: [yaml]
+
+# ==================== PYTHON HOOKS ====================
+- id: flake8
+  name: Flake8 Linter
+  entry: flake8
+  language: system
+  types: [python]
+  args: [--config, configs/python/flake8.conf]
+
+- id: black
+  name: Python Black Formatter
+  entry: black
+  language: system
+  types: [python]
+  args: [--config, configs/python/pyproject.toml]
+
+- id: isort
+  name: Python Import Sort
+  entry: isort
+  language: system
+  types: [python]
+  args: [--profile, black]
+
+# ==================== DOCKER HOOKS ====================
+- id: hadolint
+  name: Dockerfile Lint
+  entry: hadolint
+  language: system
+  types: [dockerfile]
+  args: [--ignore, DL3008, --ignore, DL3009, --ignore, DL3015, --ignore, DL3033]
+
+# ==================== SHELL HOOKS ====================
+- id: shellcheck
+  name: Shell Script Check
+  entry: shellcheck
+  language: system
+  types: [shell]
