@@ -18,8 +18,27 @@ This repository aims to standardize and streamline code quality practices across
 
 Whether you're working on personal projects or enterprise applications, these shared configurations ensure that code quality checks are consistent, comprehensive, and easy to implement across your entire development workflow.
 
+## Auto-Release System
+
+This repository features automatic versioning and release creation through GitHub Actions. When PRs are merged to the `master` branch:
+
+🔄 **Automatic Version Increment**: Based on PR title/labels
+
+- `feat`, `feature`, `minor` → Minor release (v1.0.0 → v1.1.0)
+- `major`, `breaking` → Major release (v1.0.0 → v2.0.0)  
+- Everything else → Patch release (v1.0.0 → v1.0.1)
+
+🏷️ **Auto-Generated Tags & Releases**: Creates git tags and GitHub releases with changelog
+
+**Example PR titles:**
+
+- `feat: add new security hooks` → v1.1.0
+- `fix: resolve ansible-lint issue` → v1.0.1
+- `major: breaking change to hook structure` → v2.0.0
+
 ## Table of Contents
 
+- [Auto-Release System](#auto-release-system)
 - [Prerequisites](#prerequisites)
 - [Environment Setup](#environment-setup)
   - [Install pyenv](#install-pyenv)
