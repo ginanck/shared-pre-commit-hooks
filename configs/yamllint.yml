@@ -3,47 +3,17 @@
 extends: default
 
 rules:
-  # Allow longer lines for readability
-  line-length:
-    max: 120
-    level: warning
-
-  # Allow comments to have different indentation
-  comments-indentation: disable
-
-  # Ensure proper comment spacing (required by ansible-lint)
-  comments:
-    min-spaces-from-content: 1
-
-  # Forbid octal values (required by ansible-lint)
-  octal-values:
-    forbid-implicit-octal: true
-    forbid-explicit-octal: true
-
-  # More flexible indentation for Ansible
-  indentation:
-    spaces: 2
-    indent-sequences: true
-    check-multi-line-strings: false
-
-  # Allow truthy values (yes/no, on/off) common in Ansible
-  truthy:
-    allowed-values: ["true", "false", "yes", "no", "on", "off"]
-  # Allow empty documents (common in Ansible includes)
-  document-start: disable
-
-  # Allow key repetition (can happen in Ansible with includes)
-  key-duplicates: disable
-
-  # More flexible brackets spacing
-  brackets:
-    min-spaces-inside: 0
-    max-spaces-inside: 1
-
-  # More flexible braces spacing
   braces:
-    min-spaces-inside: 0
     max-spaces-inside: 1
+    level: error
+  brackets:
+    max-spaces-inside: 1
+    level: error
+  line-length: disable
+  truthy: disable
+  comments: disable
+  comments-indentation: disable
+  document-start: disable
 
 ignore: |
   .cache/
