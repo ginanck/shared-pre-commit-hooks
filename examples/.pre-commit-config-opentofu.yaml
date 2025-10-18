@@ -3,11 +3,17 @@ default_stages: [pre-commit, manual]
 default_install_hook_types: [pre-commit, pre-push, commit-msg, prepare-commit-msg]
 
 repos:
-  # Security scanning
-  - repo: https://github.com/ginanck/shared-pre-commit-hooks
-    rev: v0.13.0
+  # Local tools (must be installed in your environment)
+  - repo: local
     hooks:
+      # ==================== SECURITY HOOKS ====================
       - id: gitleaks
+        name: GitLeaks Security Scan
+        entry: gitleaks
+        language: system
+        args: ["detect", "--source", ".", "--verbose"]
+        pass_filenames: false
+        always_run: true
 
   # OpenTofu
   - repo: https://github.com/tofuutils/pre-commit-opentofu
