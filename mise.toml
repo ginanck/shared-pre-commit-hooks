@@ -64,13 +64,10 @@ ripgrep-all = "0.10.9"
 hadolint = "2.14.0"
 
 # Ansible/YAML tools (Python packages - will need pip install)
-ansible-lint = "25.9.2"
 yamllint = "1.37.1"
 
 # Python tools (will need pip install)
 black = "25.9.0"
-isort = "6.1.0"
-flake8 = "7.3.0"
 
 # Shell tools
 shellcheck = "0.11.0"

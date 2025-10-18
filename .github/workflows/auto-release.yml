@@ -1,0 +1,62 @@
+name: Auto Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get next version
+        id: version
+        run: |
+          # Get latest tag or default to v0.0.0
+          LATEST=$(git tag --sort=-version:refname | head -n1 || echo "v0.0.0")
+          
+          # Extract version numbers
+          VERSION=${LATEST#v}
+          IFS='.' read -ra V <<< "$VERSION"
+          MAJOR=${V[0]:-0}
+          MINOR=${V[1]:-0}
+          PATCH=${V[2]:-0}
+          
+          # Determine increment based on PR title/labels
+          PR_TEXT="${{ github.event.pull_request.title }} ${{ github.event.pull_request.labels.*.name }}"
+          
+          if echo "$PR_TEXT" | grep -qi "major\|breaking"; then
+            NEW_VERSION="v$((MAJOR + 1)).0.0"
+          elif echo "$PR_TEXT" | grep -qi "minor\|feature\|feat"; then
+            NEW_VERSION="v$MAJOR.$((MINOR + 1)).0"
+          else
+            NEW_VERSION="v$MAJOR.$MINOR.$((PATCH + 1))"
+          fi
+          
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION (from $LATEST)"
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.new_version }}"
+          
+          # Create and push tag
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$NEW_VERSION" -m "Release $NEW_VERSION"
+          git push origin "$NEW_VERSION"
+          
+          # Create GitHub release
+          gh release create "$NEW_VERSION" \
+            --title "Release $NEW_VERSION" \
+            --notes "Auto-release from PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
