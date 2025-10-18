@@ -58,5 +58,5 @@ jobs:
           
           # Create GitHub release
           gh release create "$NEW_VERSION" \
-            --title "Release $NEW_VERSION" \
+            --title "$NEW_VERSION" \
             --notes "Auto-release from PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
