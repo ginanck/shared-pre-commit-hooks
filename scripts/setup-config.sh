@@ -43,10 +43,10 @@ log "Setting up shared configuration files..."
 
 # List of config files to download
 CONFIG_FILES=(
-    "ansible-lint.yml:.config/ansible/ansible-lint.yml"
-    "yamllint.yml:.config/ansible/yamllint.yml"
-    "flake8.conf:.config/python/flake8.conf"
-    "pyproject.toml:.config/python/pyproject.toml"
+    "ansible-lint.yml:.config/ansible-lint.yml"
+    "yamllint.yml:.config/yamllint.yml"
+    "flake8.conf:.config/flake8.conf"
+    "pyproject.toml:.config/pyproject.toml"
 )
 
 # Download and setup each config file
