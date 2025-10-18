@@ -57,6 +57,7 @@ ignore: |
   fact_cache/
   tmp/
   vault/
-  files/helm/
+  files/helm/*.yml
+  files/helm/*.yaml
   roles/
   todo/
