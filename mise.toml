@@ -59,6 +59,7 @@ jq = "1.7.1"
 markdownlint-cli2 = "0.18.1"
 ripgrep = "15.0.0"
 ripgrep-all = "0.10.9"
+ripsecrets = "0.1.11"
 
 # Docker tools
 hadolint = "2.14.0"
