@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Setup script for shared pre-commit configuration files
+# This script downloads the latest configuration files from the repository
+
 set -euo pipefail
 
 # Configuration
@@ -41,13 +44,40 @@ mkdir -p "$CONFIG_DIR"
 
 log "Setting up shared configuration files..."
 
-# List of config files to download
+# Check if any config files exist and ask user once
+EXISTING_FILES=()
 CONFIG_FILES=(
     "ansible-lint.yml:.config/ansible-lint.yml"
     "yamllint.yml:.config/yamllint.yml"
     "flake8.conf:.config/flake8.conf"
     "pyproject.toml:.config/pyproject.toml"
 )
+
+# Check for existing files
+for config_mapping in "${CONFIG_FILES[@]}"; do
+    IFS=':' read -r source_file target_path <<< "$config_mapping"
+    if [[ -f "$target_path" ]]; then
+        EXISTING_FILES+=("$target_path")
+    fi
+done
+
+# Ask user once if they want to overwrite existing files
+OVERWRITE_ALL=false
+if [[ ${#EXISTING_FILES[@]} -gt 0 ]]; then
+    warn "Found existing configuration files:"
+    for file in "${EXISTING_FILES[@]}"; do
+        warn "  - $file"
+    done
+    echo
+    read -p "Do you want to overwrite existing files with the latest versions? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        OVERWRITE_ALL=true
+        log "Will overwrite existing files with latest versions"
+    else
+        log "Will skip existing files"
+    fi
+fi
 
 # Download and setup each config file
 for config_mapping in "${CONFIG_FILES[@]}"; do
@@ -58,14 +88,14 @@ for config_mapping in "${CONFIG_FILES[@]}"; do
     mkdir -p "$target_dir"
     
     # Skip if file exists and user doesn't want to overwrite
-    if [[ -f "$target_path" ]]; then
-        warn "Config file $target_path already exists"
-        read -p "Overwrite? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            log "Skipping $target_path"
-            continue
-        fi
+    if [[ -f "$target_path" ]] && [[ "$OVERWRITE_ALL" = false ]]; then
+        log "Skipping $target_path (already exists)"
+        continue
+    fi
+    
+    # Show message for existing files being overwritten
+    if [[ -f "$target_path" ]] && [[ "$OVERWRITE_ALL" = true ]]; then
+        warn "Overwriting $target_path with latest version"
     fi
     
     # Download config file
@@ -94,7 +124,7 @@ if [[ ! -f "ansible.cfg" ]]; then
     cat > ansible.cfg << 'EOF'
 [defaults]
 # Use shared configuration files
-ansible_lint_config = .config/ansible/ansible-lint.yml
+ansible_lint_config = .config/ansible-lint.yml
 
 [inventory]
 # Add your inventory configuration here
