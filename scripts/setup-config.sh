@@ -1,0 +1,123 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Configuration
+REPO_URL="https://api.github.com/repos/ginanck/shared-pre-commit-hooks/contents/configs"
+CONFIG_DIR=".config"
+TEMP_DIR=$(mktemp -d)
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+log() {
+    echo -e "${BLUE}[setup-configs]${NC} $1"
+}
+
+success() {
+    echo -e "${GREEN}[setup-configs]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[setup-configs]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[setup-configs]${NC} $1" >&2
+}
+
+cleanup() {
+    rm -rf "$TEMP_DIR"
+}
+
+trap cleanup EXIT
+
+# Create .config directory if it doesn't exist
+mkdir -p "$CONFIG_DIR"
+
+log "Setting up shared configuration files..."
+
+# List of config files to download
+CONFIG_FILES=(
+    "ansible-lint.yml:.config/ansible/ansible-lint.yml"
+    "yamllint.yml:.config/ansible/yamllint.yml"
+    "flake8.conf:.config/python/flake8.conf"
+    "pyproject.toml:.config/python/pyproject.toml"
+)
+
+# Download and setup each config file
+for config_mapping in "${CONFIG_FILES[@]}"; do
+    IFS=':' read -r source_file target_path <<< "$config_mapping"
+    
+    # Create target directory
+    target_dir=$(dirname "$target_path")
+    mkdir -p "$target_dir"
+    
+    # Skip if file exists and user doesn't want to overwrite
+    if [[ -f "$target_path" ]]; then
+        warn "Config file $target_path already exists"
+        read -p "Overwrite? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log "Skipping $target_path"
+            continue
+        fi
+    fi
+    
+    # Download config file
+    log "Downloading $source_file to $target_path"
+    
+    if curl -fsSL "https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/configs/$source_file" -o "$target_path"; then
+        success "✓ Downloaded $target_path"
+    else
+        error "✗ Failed to download $source_file"
+        exit 1
+    fi
+done
+
+# Create .gitignore entry for .config if it doesn't exist
+if [[ -f ".gitignore" ]] && ! grep -q "^\.config/$" ".gitignore"; then
+    log "Adding .config/ to .gitignore"
+    echo "" >> .gitignore
+    echo "# Shared configuration files (managed by pre-commit)" >> .gitignore
+    echo ".config/" >> .gitignore
+    success "✓ Added .config/ to .gitignore"
+fi
+
+# Create a local ansible.cfg that points to the shared config
+if [[ ! -f "ansible.cfg" ]]; then
+    log "Creating ansible.cfg with shared configuration paths"
+    cat > ansible.cfg << 'EOF'
+[defaults]
+# Use shared configuration files
+ansible_lint_config = .config/ansible/ansible-lint.yml
+
+[inventory]
+# Add your inventory configuration here
+
+[ssh_connection]
+# Add your SSH configuration here
+EOF
+    success "✓ Created ansible.cfg"
+else
+    warn "ansible.cfg already exists, skipping creation"
+fi
+
+success "🎉 Configuration setup complete!"
+log "Config files installed in:"
+for config_mapping in "${CONFIG_FILES[@]}"; do
+    IFS=':' read -r source_file target_path <<< "$config_mapping"
+    if [[ -f "$target_path" ]]; then
+        log "  - $target_path"
+    fi
+done
+
+log ""
+log "Next steps:"
+log "1. Review the configuration files in .config/ directory"
+log "2. Customize them for your project if needed"
+log "3. Run 'pre-commit run --all-files' to test the setup"
