@@ -13,14 +13,20 @@ skip_list:
 exclude_paths:
   - .cache/
   - .github/
-  - collections/
-  - roles/
+  - .config/
   - molecule/
+  - .pre-commit-config.yaml
+  - .pre-commit-config*.yaml
+  - .pre-commit-hooks.yaml
+  - collections/
   - fact_cache/
-  - vault/
   - tmp/
+  - vault/
+  - *.enc
+  - files/helm/
+  - roles/
+  - collections/
   - todo/
-  - "*.enc"
 
 # Use specific Ansible version for compatibility
 # supported_ansible_also: ["2.12", "2.13", "2.14"]

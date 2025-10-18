@@ -46,8 +46,13 @@ rules:
     max-spaces-inside: 1
 
 ignore: |
+  .cache/
   .github/
+  .config/
   molecule/
+  .pre-commit-config.yaml
+  .pre-commit-config*.yaml
+  .pre-commit-hooks.yaml
   collections/
   fact_cache/
   tmp/

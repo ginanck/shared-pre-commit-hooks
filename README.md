@@ -281,10 +281,32 @@ Available in `configs/python/`:
 
 You can also use the individual configuration files in the `configs/` directory:
 
-- `configs/ansible/ansible-lint.yml`
-- `configs/ansible/yamllint.yml`
-- `configs/python/flake8.conf`
-- `configs/python/pyproject.toml`
+- `configs/ansible-lint.yml`
+- `configs/yamllint.yml`
+- `configs/flake8.conf`
+- `configs/pyproject.toml`
+
+### Pre-commit Configuration Exclusions
+
+To prevent pre-commit hooks from linting their own configuration files (which can cause circular validation issues), the following exclusions are built into the configurations:
+
+**Files excluded from linting:**
+
+- `.pre-commit-config.yaml` (main pre-commit configuration)
+- `.pre-commit-config*.yaml` (variant configurations)
+- `.pre-commit-hooks.yaml` (hook definitions)
+
+**Affected hooks:**
+
+- `ansible-lint`: Excluded via `exclude_paths` in `configs/ansible-lint.yml`
+- `yamllint`: Excluded via `ignore` pattern in `configs/yamllint.yml`
+- `trailing-whitespace`: Excluded via `exclude` pattern in example configurations
+
+This prevents common issues like:
+
+- YAML linting errors on pre-commit config formatting
+- Trailing whitespace checks modifying pre-commit configs
+- Ansible-lint attempting to parse non-Ansible YAML files
 
 ---
 
