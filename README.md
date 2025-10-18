@@ -197,7 +197,7 @@ pip install -r requirements.txt
 For automated setup of configurations and dependencies:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/scripts/setup-config.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash
 ```
 
 ### Download Pre-commit Configurations
@@ -207,13 +207,13 @@ Download the appropriate pre-commit configuration for your project:
 **For Ansible projects:**
 
 ```bash
-curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/examples/.pre-commit-config-ansible.yaml
+curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/.pre-commit-config-ansible.yaml
 ```
 
 **For OpenTofu/Terraform projects:**
 
 ```bash
-curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/examples/.pre-commit-config-opentofu.yaml
+curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/.pre-commit-config-opentofu.yaml
 ```
 
 ### Install Pre-commit

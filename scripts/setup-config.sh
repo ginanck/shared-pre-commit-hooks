@@ -68,7 +68,7 @@ for config_mapping in "${CONFIG_FILES[@]}"; do
     # Download config file (always overwrite)
     log "Downloading latest $source_file to $target_path"
     
-    if curl -fsSL "https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/$source_file" -o "$target_path"; then
+    if curl -fsSL "https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/configs/$source_file" -o "$target_path"; then
         success "✓ Downloaded $target_path"
     else
         error "✗ Failed to download $source_file"
