@@ -22,7 +22,6 @@ exclude_paths:
   - fact_cache/
   - tmp/
   - vault/
-  - "*.enc"
   - files/helm/
   - roles/
   - todo/
