@@ -14,6 +14,7 @@ cryptography==46.0.3
 docker==7.1.0
 enrich==1.2.7
 filelock==3.19.1
+flake8==7.3.0
 idna==3.11
 importlib-resources==5.0.7
 importlib_metadata==8.7.0
@@ -23,6 +24,7 @@ jsonschema==4.25.1
 jsonschema-specifications==2025.9.1
 markdown-it-py==3.0.0
 MarkupSafe==3.0.3
+mccabe==0.7.0
 mdurl==0.1.2
 mitogen==0.3.29
 molecule==6.0.3
@@ -33,7 +35,9 @@ packaging==25.0
 pathspec==0.12.1
 platformdirs==4.4.0
 pluggy==1.6.0
+pycodestyle==2.14.0
 pycparser==2.23
+pyflakes==3.4.0
 Pygments==2.19.2
 pytokens==0.2.0
 PyYAML==6.0.3
@@ -49,4 +53,5 @@ tomli==2.3.0
 typing_extensions==4.15.0
 urllib3==2.5.0
 wcmatch==10.1
+yamllint==1.37.1
 zipp==3.23.0
