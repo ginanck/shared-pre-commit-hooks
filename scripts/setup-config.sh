@@ -42,10 +42,9 @@ trap cleanup EXIT
 # Create .config directory if it doesn't exist
 mkdir -p "$CONFIG_DIR"
 
-log "Setting up shared configuration files..."
+log "Setting up shared configuration files (always downloading latest versions)..."
 
-# Check if any config files exist and ask user once
-EXISTING_FILES=()
+# List of config files to download
 CONFIG_FILES=(
     "ansible-lint.yml:.config/ansible-lint.yml"
     "yamllint.yml:.config/yamllint.yml"
@@ -53,33 +52,7 @@ CONFIG_FILES=(
     "pyproject.toml:.config/pyproject.toml"
 )
 
-# Check for existing files
-for config_mapping in "${CONFIG_FILES[@]}"; do
-    IFS=':' read -r source_file target_path <<< "$config_mapping"
-    if [[ -f "$target_path" ]]; then
-        EXISTING_FILES+=("$target_path")
-    fi
-done
-
-# Ask user once if they want to overwrite existing files
-OVERWRITE_ALL=false
-if [[ ${#EXISTING_FILES[@]} -gt 0 ]]; then
-    warn "Found existing configuration files:"
-    for file in "${EXISTING_FILES[@]}"; do
-        warn "  - $file"
-    done
-    echo
-    read -p "Do you want to overwrite existing files with the latest versions? (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        OVERWRITE_ALL=true
-        log "Will overwrite existing files with latest versions"
-    else
-        log "Will skip existing files"
-    fi
-fi
-
-# Download and setup each config file
+# Download and setup each config file (always overwrite)
 for config_mapping in "${CONFIG_FILES[@]}"; do
     IFS=':' read -r source_file target_path <<< "$config_mapping"
     
@@ -87,19 +60,13 @@ for config_mapping in "${CONFIG_FILES[@]}"; do
     target_dir=$(dirname "$target_path")
     mkdir -p "$target_dir"
     
-    # Skip if file exists and user doesn't want to overwrite
-    if [[ -f "$target_path" ]] && [[ "$OVERWRITE_ALL" = false ]]; then
-        log "Skipping $target_path (already exists)"
-        continue
-    fi
-    
     # Show message for existing files being overwritten
-    if [[ -f "$target_path" ]] && [[ "$OVERWRITE_ALL" = true ]]; then
-        warn "Overwriting $target_path with latest version"
+    if [[ -f "$target_path" ]]; then
+        warn "Overwriting existing file: $target_path"
     fi
     
-    # Download config file
-    log "Downloading $source_file to $target_path"
+    # Download config file (always overwrite)
+    log "Downloading latest $source_file to $target_path"
     
     if curl -fsSL "https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/$source_file" -o "$target_path"; then
         success "✓ Downloaded $target_path"
@@ -116,25 +83,6 @@ if [[ -f ".gitignore" ]] && ! grep -q "^\.config/$" ".gitignore"; then
     echo "# Shared configuration files (managed by pre-commit)" >> .gitignore
     echo ".config/" >> .gitignore
     success "✓ Added .config/ to .gitignore"
-fi
-
-# Create a local ansible.cfg that points to the shared config
-if [[ ! -f "ansible.cfg" ]]; then
-    log "Creating ansible.cfg with shared configuration paths"
-    cat > ansible.cfg << 'EOF'
-[defaults]
-# Use shared configuration files
-ansible_lint_config = .config/ansible-lint.yml
-
-[inventory]
-# Add your inventory configuration here
-
-[ssh_connection]
-# Add your SSH configuration here
-EOF
-    success "✓ Created ansible.cfg"
-else
-    warn "ansible.cfg already exists, skipping creation"
 fi
 
 success "🎉 Configuration setup complete!"
