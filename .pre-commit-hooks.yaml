@@ -1,3 +1,14 @@
+# ==================== SETUP HOOKS ====================
+- id: setup-configs
+  name: Setup Shared Configuration Files
+  entry: bash
+  language: system
+  args: [-c, 'curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/main/scripts/setup-configs.sh | bash']
+  pass_filenames: false
+  always_run: true
+  stages: [manual]
+  verbose: true
+
 # ==================== SECURITY HOOKS ====================
 - id: gitleaks
   name: GitLeaks Security Scan
