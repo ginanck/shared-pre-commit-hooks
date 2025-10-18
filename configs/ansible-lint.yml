@@ -22,10 +22,9 @@ exclude_paths:
   - fact_cache/
   - tmp/
   - vault/
-  - *.enc
+  - "*.enc"
   - files/helm/
   - roles/
-  - collections/
   - todo/
 
 # Use specific Ansible version for compatibility

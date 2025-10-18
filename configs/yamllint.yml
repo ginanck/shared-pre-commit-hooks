@@ -60,5 +60,4 @@ ignore: |
   *.enc
   files/helm/
   roles/
-  collections/
   todo/
