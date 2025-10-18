@@ -180,13 +180,13 @@ Download the appropriate pre-commit configuration for your project:
 **For Ansible projects:**
 
 ```bash
-curl -o .pre-commit-config.yml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/.pre-commit-config-ansible.yml
+curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/.pre-commit-config-ansible.yaml
 ```
 
 **For OpenTofu/Terraform projects:**
 
 ```bash
-curl -o .pre-commit-config.yml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/.pre-commit-config-opentofu.yml
+curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/.pre-commit-config-opentofu.yaml
 ```
 
 ### Install Pre-commit
