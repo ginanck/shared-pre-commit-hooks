@@ -3,24 +3,43 @@ default_stages: [pre-commit, manual]
 default_install_hook_types: [pre-commit, pre-push, commit-msg, prepare-commit-msg]
 
 repos:
-  # Setup shared configurations (run once)
-  - repo: https://github.com/ginanck/shared-pre-commit-hooks
-    rev: v0.9.0
-    hooks:
-      - id: setup-configs
-
   # Security scanning and linting tools
   - repo: https://github.com/ginanck/shared-pre-commit-hooks
-    rev: v0.9.0
+    rev: v0.10.0
     hooks:
       - id: gitleaks
-      - id: ansible-lint
-      - id: yamllint
-      - id: flake8
-      - id: black
       - id: isort
       - id: hadolint
       - id: shellcheck
+
+  # Ansible specific tools
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v24.9.2
+    hooks:
+      - id: ansible-lint
+        args: [-c, .config/ansible-lint.yml, -q]
+        files: \.(yaml|yml)$
+        exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*)
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-c, .config/yamllint.yml]
+
+  # Python tools
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        args: [--config, .config/flake8.conf]
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        args: [--config, .config/pyproject.toml]
 
   # General file formatting and validation
   - repo: https://github.com/pre-commit/pre-commit-hooks
