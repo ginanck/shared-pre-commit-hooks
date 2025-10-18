@@ -3,9 +3,15 @@ default_stages: [pre-commit, manual]
 default_install_hook_types: [pre-commit, pre-push, commit-msg, prepare-commit-msg]
 
 repos:
-  # Security scanning
+  # Setup shared configurations (run once)
   - repo: https://github.com/ginanck/shared-pre-commit-hooks
-    rev: v0.2.0
+    rev: v0.5.0
+    hooks:
+      - id: setup-configs
+
+  # Security scanning and linting tools
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v0.5.0
     hooks:
       - id: gitleaks
       - id: ansible-lint
