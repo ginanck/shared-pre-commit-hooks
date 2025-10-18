@@ -12,7 +12,7 @@
   name: Ansible Lint
   entry: ansible-lint
   language: system
-  args: [-c, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/ansible/ansible-lint.yml, -q]
+  args: [-c, ~/Projects/dev/shared-pre-commit-hooks/config/ansible-lint.yml, -q]
   files: \.(yaml|yml)$
   types: [file]
   exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*)
@@ -21,7 +21,7 @@
   name: YAML Lint
   entry: yamllint
   language: system
-  args: [-c, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/ansible/yamllint.yml]
+  args: [-c, ~/Projects/dev/shared-pre-commit-hooks/config/yamllint.yml]
   files: \.(yaml|yml)$
   types: [yaml]
 
@@ -30,13 +30,15 @@
   name: Flake8 Linter
   entry: flake8
   language: system
-  args: [--config, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/python/flake8.conf]
+  types: [python]
+  args: [--config, ~/Projects/dev/shared-pre-commit-hooks/config/flake8.conf]
 
 - id: black
   name: Python Black Formatter
   entry: black
   language: system
-  args: [--config, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/python/pyproject.toml]
+  types: [python]
+  args: [--config, ~/Projects/dev/shared-pre-commit-hooks/config/pyproject.toml]
 
 - id: isort
   name: Python Import Sort
