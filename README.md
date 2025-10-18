@@ -192,6 +192,14 @@ pip install -r requirements.txt
 
 ## Usage
 
+### Quick Setup (One-liner)
+
+For automated setup of configurations and dependencies:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-configs.sh | bash
+```
+
 ### Download Pre-commit Configurations
 
 Download the appropriate pre-commit configuration for your project:

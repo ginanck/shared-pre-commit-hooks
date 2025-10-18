@@ -1,14 +1,3 @@
-# ==================== SETUP HOOKS ====================
-- id: setup-configs
-  name: Setup Shared Configuration Files
-  entry: bash
-  language: system
-  args: [-c, 'curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/main/scripts/setup-configs.sh | bash']
-  pass_filenames: false
-  always_run: true
-  stages: [manual]
-  verbose: true
-
 # ==================== SECURITY HOOKS ====================
 - id: gitleaks
   name: GitLeaks Security Scan
@@ -19,38 +8,6 @@
   always_run: true
 
 # ==================== ANSIBLE HOOKS ====================
-- id: ansible-lint
-  name: Ansible Lint
-  entry: ansible-lint
-  language: system
-  args: [-c, ~/Projects/dev/shared-pre-commit-hooks/configs/ansible-lint.yml, -q]
-  files: \.(yaml|yml)$
-  types: [file]
-  exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*)
-
-- id: yamllint
-  name: YAML Lint
-  entry: yamllint
-  language: system
-  args: [-c, ~/Projects/dev/shared-pre-commit-hooks/configs/yamllint.yml]
-  files: \.(yaml|yml)$
-  types: [yaml]
-
-# ==================== PYTHON HOOKS ====================
-- id: flake8
-  name: Flake8 Linter
-  entry: flake8
-  language: system
-  types: [python]
-  args: [--config, ~/Projects/dev/shared-pre-commit-hooks/configs/flake8.conf]
-
-- id: black
-  name: Python Black Formatter
-  entry: black
-  language: system
-  types: [python]
-  args: [--config, ~/Projects/dev/shared-pre-commit-hooks/configs/pyproject.toml]
-
 - id: isort
   name: Python Import Sort
   entry: isort
