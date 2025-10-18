@@ -1,12 +1,3 @@
-# ==================== SETUP HOOK ====================
-- id: setup-configs
-  name: Setup Shared Configuration Files
-  entry: bash -c 'mkdir -p .config && cp -r configs/* .config/ 2>/dev/null || true; echo "Configuration files copied to .config/"'
-  language: system
-  pass_filenames: false
-  always_run: true
-  verbose: true
-
 # ==================== SECURITY HOOKS ====================
 - id: gitleaks
   name: GitLeaks Security Scan
@@ -21,7 +12,7 @@
   name: Ansible Lint
   entry: ansible-lint
   language: system
-  args: [-c, .config/ansible/ansible-lint.yml, -q]
+  args: [-c, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/ansible/ansible-lint.yml, -q]
   files: \.(yaml|yml)$
   types: [file]
   exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*)
@@ -30,7 +21,7 @@
   name: YAML Lint
   entry: yamllint
   language: system
-  args: [-c, .config/ansible/yamllint.yml]
+  args: [-c, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/ansible/yamllint.yml]
   files: \.(yaml|yml)$
   types: [yaml]
 
@@ -39,15 +30,13 @@
   name: Flake8 Linter
   entry: flake8
   language: system
-  types: [python]
-  args: [--config, .config/python/flake8.conf]
+  args: [--config, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/python/flake8.conf]
 
 - id: black
   name: Python Black Formatter
   entry: black
   language: system
-  types: [python]
-  args: [--config, .config/python/pyproject.toml]
+  args: [--config, https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/configs/python/pyproject.toml]
 
 - id: isort
   name: Python Import Sort
