@@ -48,7 +48,7 @@ repos:
         language: system
         args: [-c, .config/ansible-lint.yml, -q]
         files: \.(yaml|yml)$
-        exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*|\.pre-commit-config.*\.yaml$|\.pre-commit-hooks\.yaml$|\.github/branch-protection\.yml$|\.travis\.yml$|tests/.*)
+        exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
 
       # YAML linting
       - id: yamllint
@@ -58,7 +58,7 @@ repos:
         language: system
         args: [-c, .config/yamllint.yml]
         files: \.(yaml|yml)$
-        exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*|\.pre-commit-config.*\.yaml$|\.pre-commit-hooks\.yaml$|\.github/branch-protection\.yml$|\.travis\.yml$|tests/.*)
+        exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
       
       # ==================== PYTHON HOOKS ====================
       - id: flake8
@@ -105,6 +105,7 @@ repos:
   # General file formatting and validation
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
+    exclude: ^(\.github/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
     hooks:
       - id: trailing-whitespace
         name: trailing-whitespace
