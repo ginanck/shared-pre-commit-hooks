@@ -49,10 +49,10 @@ case "$PROJECT_TYPE" in
         log "Setting up Ansible project configuration..."
         PRE_COMMIT_CONFIG="$REPO_URL/examples/pre-commit-config-ansible.yaml"
         CONFIG_FILES=(
-            "ansible-lint.yml:.configs/ansible-lint.yml"
-            "yamllint.yml:.configs/yamllint.yml"
-            "flake8.conf:.configs/flake8.conf"
-            "pyproject.toml:.configs/pyproject.toml"
+            "ansible-lint.yml:.config/ansible-lint.yml"
+            "yamllint.yml:.config/yamllint.yml"
+            "flake8.conf:.config/flake8.conf"
+            "pyproject.toml:.config/pyproject.toml"
         )
         ;;
     "terraform"|"opentofu")
@@ -115,7 +115,7 @@ if [[ ${#CONFIG_FILES[@]} -gt 0 ]]; then
         # Download config file (always overwrite)
         log "Downloading latest $source_file to $target_path"
 
-        if curl -fsSL "$REPO_URL/configs/$source_file" -o "$target_path"; then
+        if curl -fsSL "$REPO_URL/config/$source_file" -o "$target_path"; then
             success "✓ Downloaded $target_path"
         else
             error "✗ Failed to download $source_file"
@@ -128,14 +128,14 @@ fi
 
 # Create .gitignore entry for .config if it doesn't exist and we downloaded config files
 if [[ ${#CONFIG_FILES[@]} -gt 0 ]]; then
-    if [[ ! -f ".gitignore" ]] || ! grep -q "^\.configs/$" ".gitignore" 2>/dev/null; then
-        log "Adding .configs/ to .gitignore"
+    if [[ ! -f ".gitignore" ]] || ! grep -q "^\.config/$" ".gitignore" 2>/dev/null; then
+        log "Adding .config/ to .gitignore"
         echo "" >> .gitignore
         echo "# Shared configuration files (managed by pre-commit)" >> .gitignore
-        echo ".configs/" >> .gitignore
-        success "✓ Added .configs/ to .gitignore"
+        echo ".config/" >> .gitignore
+        success "✓ Added .config/ to .gitignore"
     else
-        log ".configs/ already in .gitignore"
+        log ".config/ already in .gitignore"
     fi
 fi
 
@@ -157,7 +157,7 @@ log "Next steps:"
 log "1. Install pre-commit: pip install pre-commit"
 log "2. Install pre-commit hooks: pre-commit install"
 if [[ ${#CONFIG_FILES[@]} -gt 0 ]]; then
-    log "3. Review the configuration files in .configs/ directory"
+    log "3. Review the configuration files in .config/ directory"
     log "4. Customize them for your project if needed"
     log "5. Run 'pre-commit run --all-files' to test the setup"
 else
