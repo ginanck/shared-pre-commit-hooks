@@ -46,7 +46,7 @@ repos:
         description: Checks Ansible playbooks for best practices and behavior that could be improved
         entry: ansible-lint
         language: system
-        args: [-c, .config/ansible-lint.yml, -q]
+        args: [-c, .configs/ansible-lint.yml, -q]
         files: \.(yaml|yml)$
         exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
 
@@ -56,7 +56,7 @@ repos:
         description: Validates YAML files for syntax errors and enforces consistent formatting and style
         entry: yamllint
         language: system
-        args: [-c, .config/yamllint.yml]
+        args: [-c, .configs/yamllint.yml]
         files: \.(yaml|yml)$
         exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
       
@@ -66,7 +66,7 @@ repos:
         description: Checks Python code for style guide enforcement, programming errors, and code complexity
         entry: flake8
         language: system
-        args: [--config, .config/flake8.conf]
+        args: [--config, .configs/flake8.conf]
         files: \.py$
       
       - id: black
@@ -74,7 +74,7 @@ repos:
         description: Automatically formats Python code to ensure consistent style and readability
         entry: black
         language: system
-        args: [--config, .config/pyproject.toml]
+        args: [--config, .configs/pyproject.toml]
         files: \.py$
 
       - id: isort
