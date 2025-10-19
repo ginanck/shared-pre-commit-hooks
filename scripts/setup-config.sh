@@ -7,7 +7,7 @@
 set -euo pipefail
 
 # Configuration
-REPO_URL="https://api.github.com/repos/ginanck/shared-pre-commit-hooks/contents/configs"
+REPO_URL="$REPO_URL"
 CONFIG_DIR=".config"
 TEMP_DIR=$(mktemp -d)
 
@@ -47,7 +47,7 @@ PROJECT_TYPE="${1:-}"
 case "$PROJECT_TYPE" in
     "ansible")
         log "Setting up Ansible project configuration..."
-        PRE_COMMIT_CONFIG="https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/pre-commit-config-ansible.yaml"
+        PRE_COMMIT_CONFIG="$REPO_URL/examples/pre-commit-config-ansible.yaml"
         CONFIG_FILES=(
             "ansible-lint.yml:.config/ansible-lint.yml"
             "yamllint.yml:.config/yamllint.yml"
@@ -57,7 +57,7 @@ case "$PROJECT_TYPE" in
         ;;
     "terraform"|"opentofu")
         log "Setting up Terraform/OpenTofu project configuration..."
-        PRE_COMMIT_CONFIG="https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/pre-commit-config-opentofu.yaml"
+        PRE_COMMIT_CONFIG="$REPO_URL/examples/pre-commit-config-opentofu.yaml"
         CONFIG_FILES=()  # No additional config files needed for Terraform
         ;;
     "")
@@ -114,8 +114,8 @@ if [[ ${#CONFIG_FILES[@]} -gt 0 ]]; then
         
         # Download config file (always overwrite)
         log "Downloading latest $source_file to $target_path"
-        
-        if curl -fsSL "https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/configs/$source_file" -o "$target_path"; then
+
+        if curl -fsSL "$REPO_URL/configs/$source_file" -o "$target_path"; then
             success "✓ Downloaded $target_path"
         else
             error "✗ Failed to download $source_file"
