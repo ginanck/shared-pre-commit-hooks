@@ -28,6 +28,7 @@ exclude_paths:
   - .pre-commit-config.yaml
   - .pre-commit-config*.yaml
   - .pre-commit-hooks.yaml
+  - .travis.yml
   - collections/
   - fact_cache/
   - tmp/
