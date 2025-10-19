@@ -110,7 +110,6 @@ repos:
       - id: trailing-whitespace
         name: trailing-whitespace
         description: Removes trailing whitespace from the end of lines
-        exclude: ^(\.pre-commit-config.*\.yaml$|\.pre-commit-hooks\.yaml$)
       - id: end-of-file-fixer
         name: end-of-file-fixer
         description: Ensures files end with a single newline character
