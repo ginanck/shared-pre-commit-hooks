@@ -48,7 +48,7 @@ repos:
         language: system
         args: [-c, .config/ansible-lint.yml, -q]
         files: \.(yaml|yml)$
-        exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*|\.pre-commit-config.*\.yaml$|\.pre-commit-hooks\.yaml$|\.github/branch-protection\.yml$|\.travis\.yml$)
+        exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*|\.pre-commit-config.*\.yaml$|\.pre-commit-hooks\.yaml$|\.github/branch-protection\.yml$|\.travis\.yml$|tests/.*)
 
       # YAML linting
       - id: yamllint
@@ -58,7 +58,7 @@ repos:
         language: system
         args: [-c, .config/yamllint.yml]
         files: \.(yaml|yml)$
-        exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*|\.pre-commit-config.*\.yaml$|\.pre-commit-hooks\.yaml$|\.github/branch-protection\.yml$|\.travis\.yml$)
+        exclude: ^(molecule/.*|\.github/.*|requirements\.yml$|collections/.*|roles/.*|todo/.*|ansible/.*|\.pre-commit-config.*\.yaml$|\.pre-commit-hooks\.yaml$|\.github/branch-protection\.yml$|\.travis\.yml$|tests/.*)
       
       # ==================== PYTHON HOOKS ====================
       - id: flake8

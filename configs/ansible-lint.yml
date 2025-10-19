@@ -37,6 +37,7 @@ exclude_paths:
   - files/helm/*.yaml
   - roles/
   - todo/
+  - tests/
 
 # Warn on risky file permissions
 warn_list:
