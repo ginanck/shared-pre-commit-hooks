@@ -49,10 +49,10 @@ case "$PROJECT_TYPE" in
         log "Setting up Ansible project configuration..."
         PRE_COMMIT_CONFIG="$REPO_URL/examples/pre-commit-config-ansible.yaml"
         CONFIG_FILES=(
-            "ansible-lint.yml:.config/ansible-lint.yml"
-            "yamllint.yml:.config/yamllint.yml"
-            "flake8.conf:.config/flake8.conf"
-            "pyproject.toml:.config/pyproject.toml"
+            "ansible-lint.yml:.configs/ansible-lint.yml"
+            "yamllint.yml:.configs/yamllint.yml"
+            "flake8.conf:.configs/flake8.conf"
+            "pyproject.toml:.configs/pyproject.toml"
         )
         ;;
     "terraform"|"opentofu")
@@ -157,7 +157,7 @@ log "Next steps:"
 log "1. Install pre-commit: pip install pre-commit"
 log "2. Install pre-commit hooks: pre-commit install"
 if [[ ${#CONFIG_FILES[@]} -gt 0 ]]; then
-    log "3. Review the configuration files in .config/ directory"
+    log "3. Review the configuration files in .configs/ directory"
     log "4. Customize them for your project if needed"
     log "5. Run 'pre-commit run --all-files' to test the setup"
 else
