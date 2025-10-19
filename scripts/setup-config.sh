@@ -7,7 +7,7 @@
 set -euo pipefail
 
 # Configuration
-REPO_URL="$REPO_URL"
+REPO_URL="https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master"
 CONFIG_DIR=".config"
 TEMP_DIR=$(mktemp -d)
 
