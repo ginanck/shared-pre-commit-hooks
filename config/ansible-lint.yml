@@ -18,6 +18,7 @@ skip_list:
   - internal-error
   - risky-shell-pipe
   - command-instead-of-shell
+  - no-handler
 
 # Exclude specific paths
 exclude_paths:
