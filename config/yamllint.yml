@@ -33,3 +33,4 @@ ignore: |
   roles/
   todo/
   tests/
+  meta/
