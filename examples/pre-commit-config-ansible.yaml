@@ -105,13 +105,13 @@ repos:
   # General file formatting and validation
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
-    exclude: ^(\.github/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
     hooks:
       - id: trailing-whitespace
         name: trailing-whitespace
         description: Removes trailing whitespace from the end of lines
       - id: end-of-file-fixer
         name: end-of-file-fixer
+        exclude: ^(\.github/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
         description: Ensures files end with a single newline character
       - id: check-added-large-files
         name: check-added-large-files
@@ -131,5 +131,6 @@ repos:
         description: Ensures files with shebangs are marked as executable
       - id: mixed-line-ending
         name: mixed-line-ending
+        exclude: ^(\.github/.*|roles/.*|collections/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-*.*\.yaml$|\.travis\.yml$)
         description: Replaces mixed line endings with Unix-style (LF) line endings
         args: ["--fix=lf"]
