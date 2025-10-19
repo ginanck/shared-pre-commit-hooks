@@ -200,13 +200,13 @@ For automated setup of configurations and dependencies:
 **For Ansible projects:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/scripts/setup-config.sh | bash -s ansible
 ```
 
 **For Terraform/OpenTofu projects:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/scripts/setup-config.sh | bash -s terraform
 ```
 
 ### Install Pre-commit
