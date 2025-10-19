@@ -34,3 +34,8 @@ ignore: |
   todo/
   tests/
   meta/
+  */meta/
+  **/meta/
+  meta/**
+  */meta/**
+  **/meta/**
