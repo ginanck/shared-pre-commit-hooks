@@ -127,12 +127,16 @@ else
 fi
 
 # Create .gitignore entry for .config if it doesn't exist and we downloaded config files
-if [[ ${#CONFIG_FILES[@]} -gt 0 ]] && [[ -f ".gitignore" ]] && ! grep -q "^\.config/$" ".gitignore"; then
-    log "Adding .config/ to .gitignore"
-    echo "" >> .gitignore
-    echo "# Shared configuration files (managed by pre-commit)" >> .gitignore
-    echo ".config/" >> .gitignore
-    success "✓ Added .config/ to .gitignore"
+if [[ ${#CONFIG_FILES[@]} -gt 0 ]]; then
+    if [[ ! -f ".gitignore" ]] || ! grep -q "^\.config/$" ".gitignore" 2>/dev/null; then
+        log "Adding .config/ to .gitignore"
+        echo "" >> .gitignore
+        echo "# Shared configuration files (managed by pre-commit)" >> .gitignore
+        echo ".config/" >> .gitignore
+        success "✓ Added .config/ to .gitignore"
+    else
+        log ".config/ already in .gitignore"
+    fi
 fi
 
 success "🎉 $PROJECT_TYPE project setup complete!"
