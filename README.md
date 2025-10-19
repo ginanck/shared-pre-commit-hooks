@@ -209,30 +209,6 @@ curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/mas
 curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform
 ```
 
-### Manual Download (Alternative Method)
-
-You can also manually download the configurations:
-
-**For Ansible projects:**
-
-```bash
-# Download pre-commit config
-curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/pre-commit-config-ansible.yaml
-
-# Create config directory and download linter configs
-mkdir -p .config
-curl -o .config/ansible-lint.yml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/configs/ansible-lint.yml
-curl -o .config/yamllint.yml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/configs/yamllint.yml
-curl -o .config/flake8.conf https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/configs/flake8.conf
-curl -o .config/pyproject.toml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/configs/pyproject.toml
-```
-
-**For OpenTofu/Terraform projects:**
-
-```bash
-curl -o .pre-commit-config.yaml https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/examples/pre-commit-config-opentofu.yaml
-```
-
 ### Install Pre-commit
 
 Install pre-commit hooks in your repository:
