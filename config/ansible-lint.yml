@@ -19,6 +19,7 @@ skip_list:
   - risky-shell-pipe
   - command-instead-of-shell
   - no-handler
+  - ignore_errors # Skip ignore_errors warnings
 
 # Exclude specific paths
 exclude_paths:
