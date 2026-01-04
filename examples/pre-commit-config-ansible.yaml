@@ -138,6 +138,7 @@ repos:
         description: Ensures executable files have proper shebang lines
       - id: check-shebang-scripts-are-executable
         name: check-shebang-scripts-are-executable
+        exclude: \.j2$
         description: Ensures files with shebangs are marked as executable
       - id: mixed-line-ending
         name: mixed-line-ending
