@@ -22,6 +22,16 @@ repos:
   # Local tools (must be installed in your environment)
   - repo: local
     hooks:
+      # ==================== GENERATE ANSIBLE DOCS ====================
+      - id: docsible
+        name: docsible
+        description: Automatically generates documentation for Ansible roles from meta/main.yml and task files
+        entry: bash -c 'if [ -f "meta/main.yml" ]; then docsible --output README.md; else echo "Skipping docsible - not an Ansible role"; fi'
+        language: system
+        pass_filenames: false
+        always_run: false
+        files: ^(meta/main\.yml|tasks/.*\.yml|defaults/main\.yml)$
+
       # ==================== SECURITY HOOKS ====================
       - id: gitleaks-commit-history
         name: gitleaks-commit-history
