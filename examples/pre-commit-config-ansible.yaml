@@ -22,16 +22,6 @@ repos:
   # Local tools (must be installed in your environment)
   - repo: local
     hooks:
-      # ==================== GENERATE ANSIBLE DOCS ====================
-      - id: docsible
-        name: docsible
-        description: Automatically generates documentation for Ansible roles from meta/main.yml and task files
-        entry: docsible
-        language: system
-        args: ["-r", "-o", "README.md", "-nob", "-com", "-tl"]
-        pass_filenames: false
-        always_run: true
-
       # ==================== SECURITY HOOKS ====================
       - id: gitleaks-commit-history
         name: gitleaks-commit-history
@@ -120,6 +110,16 @@ repos:
         entry: shellcheck
         language: system
         types: [shell]
+
+      # ==================== GENERATE ANSIBLE DOCS ====================
+      - id: docsible
+        name: docsible
+        description: Automatically generates documentation for Ansible roles from meta/main.yml and task files
+        entry: docsible
+        language: system
+        args: ["-r", "-o=README.md", "-nob", "-com", "-tl"]
+        pass_filenames: false
+        always_run: true
 
   # General file formatting and validation
   - repo: https://github.com/pre-commit/pre-commit-hooks
