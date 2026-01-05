@@ -26,11 +26,11 @@ repos:
       - id: docsible
         name: docsible
         description: Automatically generates documentation for Ansible roles from meta/main.yml and task files
-        entry: bash -c 'if [ -f "meta/main.yml" ]; then docsible --output README.md; else echo "Skipping docsible - not an Ansible role"; fi'
+        entry: docsible
         language: system
+        args: ["-r", "-o", "README.md", "-nob", "-com", "-tl"]
         pass_filenames: false
-        always_run: false
-        files: ^(meta/main\.yml|tasks/.*\.yml|defaults/main\.yml)$
+        always_run: true
 
       # ==================== SECURITY HOOKS ====================
       - id: gitleaks-commit-history
