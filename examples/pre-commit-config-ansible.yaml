@@ -117,7 +117,7 @@ repos:
         description: Automatically generates documentation for Ansible roles from meta/main.yml and task files
         entry: docsible
         language: system
-        args: ["-r", ".", "-o", "README.md", "-nob", "-com", "-tl"]
+        args: ["--role", ".", "--md-template", ".docsible_template.md", "-nob", "-com", "-tl"]
         pass_filenames: false
         always_run: true
 
