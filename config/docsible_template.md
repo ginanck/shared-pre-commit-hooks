@@ -79,67 +79,17 @@ ansible-galaxy install -r meta/install_requirements.yml
 
 ## Role Variables
 
+**These are static variables with lower priority**
+
 {% if role.defaults %}
 {% for file in role.defaults %}
-### File: `defaults/{{ file.file }}`
+#### File: defaults/{{ file.file }}
 
-| Variable | Type | Default Value | Description |
-|----------|------|---------------|-------------|
-{%- for var, data in file.data.items() %}
-{%- if '.' not in var %}
-{%- if data.type in ['dict', 'list'] %}
-{%- set has_children = namespace(found=false) %}
-{%- for child_var in file.data.keys() %}
-{%- if child_var.startswith(var ~ '.') %}
-{%- set has_children.found = true %}
-{%- endif %}
-{%- endfor %}
-{%- set value_str = data.value | string | trim %}
-{%- set is_empty = (value_str == '[]' or value_str == '{}') and not has_children.found %}
-| [`{{ var }}`](defaults/{{ file.file }}#L{{ data.line | default('') }}) | {{ data.type | default('str') }} | {{ '`[]`' if data.type == 'list' and is_empty else ('`{}`' if data.type == 'dict' and is_empty else 'See below') }} | {{ data.description | default('_No description provided_') }} |
-{%- else %}
-| [`{{ var }}`](defaults/{{ file.file }}#L{{ data.line | default('') }}) | {{ data.type | default('str') }} | `{{ data.value }}` | {{ data.description | default('_No description provided_') }} |
-{%- endif %}
-{%- endif %}
-{%- endfor %}
-
-{%- for var, data in file.data.items() %}
-{%- if '.' not in var and data.type in ['dict', 'list'] %}
-{%- set has_children = namespace(found=false) %}
-{%- for child_var in file.data.keys() %}
-{%- if child_var.startswith(var ~ '.') %}
-{%- set has_children.found = true %}
-{%- endif %}
-{%- endfor %}
-{%- set value_str = data.value | string | trim %}
-{%- set is_empty = (value_str == '[]' or value_str == '{}') and not has_children.found %}
-{%- if not is_empty %}
-
-#### `{{ var }}`
-
-```yaml
-{%- if has_children.found %}
-{%- set indices = namespace(list=[]) %}
-{%- for child_var in file.data.keys() %}
-{%- if child_var.startswith(var ~ '.') %}
-{%- set parts = child_var.replace(var ~ '.', '').split('.') %}
-{%- if parts[0].isdigit() and parts[0] not in indices.list %}
-{%- set _ = indices.list.append(parts[0]) %}
-{%- endif %}
-{%- endif %}
-{%- endfor %}
-{%- for idx in indices.list | sort %}
-- {% set item_keys = namespace(keys=[]) %}{% for child_var in file.data.keys() %}{% if child_var.startswith(var ~ '.' ~ idx ~ '.') %}{% set key = child_var.replace(var ~ '.' ~ idx ~ '.', '').split('.')[0] %}{% if key not in item_keys.keys %}{% set _ = item_keys.keys.append(key) %}{% endif %}{% endif %}{% endfor %}{% for key in item_keys.keys %}{% set full_key = var ~ '.' ~ idx ~ '.' ~ key %}{% if loop.first %}{{ key }}:{% else %}  {{ key }}:{% endif %} {% if file.data[full_key].type == 'list' %}{% for sub_child_var, sub_child_data in file.data.items() %}{% if sub_child_var.startswith(full_key ~ '.') and sub_child_var.replace(full_key ~ '.', '').isdigit() %}
-    - {{ sub_child_data.value }}{% endif %}{% endfor %}
-{% else %}{{ file.data[full_key].value }}
-{% endif %}{% endfor %}
-{%- endfor %}
-{%- else %}
-{{ data.value }}
-{%- endif %}
-```
-{%- endif %}
-{%- endif %}
+| Var | Type | Value |
+|-----|------|-------|
+{%- for var, data in file.data.items() | sort %}
+{%- set display_value = '' if data.value == '' else data.value %}
+| [{{ var }}](defaults/{{ file.file }}#L{{ data.line | default('') }}) | {{ data.type | default('str') }} | {{ '`' ~ display_value ~ '`' if display_value else '' }} |
 {%- endfor %}
 
 {% endfor %}
