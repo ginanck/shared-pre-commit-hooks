@@ -53,6 +53,7 @@ case "$PROJECT_TYPE" in
             "yamllint.yml:.config/yamllint.yml"
             "flake8.conf:.config/flake8.conf"
             "pyproject.toml:.config/pyproject.toml"
+            "docsible_template.md:.config/docsible_template.md"
         )
         ;;
     "terraform"|"opentofu")
