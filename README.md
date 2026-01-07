@@ -1,202 +1,220 @@
 # Shared Pre-commit Hooks
 
-A collection of shared pre-commit configurations and development tools for consistent code quality across projects.
-
-## Purpose
-
-This repository aims to standardize and streamline code quality practices across different project types by providing:
-
-🎯 **Consistent Quality Standards**: Pre-configured hooks that enforce coding standards, security practices, and formatting rules across all your projects.
-
-🔧 **Ready-to-Use Configurations**: Drop-in `.pre-commit-config.yml` files for popular technology stacks (Ansible, OpenTofu/Terraform, Python) that work out of the box.
-
-⚡ **Developer Productivity**: Eliminate the need to research, configure, and maintain pre-commit hooks for each new project. Simply download and use.
-
-🛡️ **Security by Default**: Integrated security scanning tools like `gitleaks` and `hadolint` to catch vulnerabilities before they reach your repository.
-
-🌍 **Multi-Technology Support**: Comprehensive tool management via `mise.toml` that covers infrastructure as code, containerization, security, and general development tools.
-
-Whether you're working on personal projects or enterprise applications, these shared configurations ensure that code quality checks are consistent, comprehensive, and easy to implement across your entire development workflow.
-
-## Auto-Release System
-
-This repository features automatic versioning and release creation through GitHub Actions. When PRs are merged to the `master` branch:
-
-🔄 **Automatic Version Increment**: Based on PR title/labels
-
-- `feat`, `feature`, `minor` → Minor release (v1.0.0 → v1.1.0)
-- `major`, `breaking` → Major release (v1.0.0 → v2.0.0)  
-- Everything else → Patch release (v1.0.0 → v1.0.1)
-
-🏷️ **Auto-Generated Tags & Releases**: Creates git tags and GitHub releases with changelog
-
-**Example PR titles:**
-
-- `feat: add new security hooks` → v1.1.0
-- `fix: resolve ansible-lint issue` → v1.0.1
-- `major: breaking change to hook structure` → v2.0.0
+Ready-to-use pre-commit configurations for Ansible, Terraform, Python, Docker, and Shell projects. Includes security scanning, linting, and formatting tools with consistent configurations.
 
 ## Table of Contents
 
-- [Auto-Release System](#auto-release-system)
-- [Prerequisites](#prerequisites)
-- [Environment Setup](#environment-setup)
-  - [Install pyenv](#install-pyenv)
-  - [Setup Python Environment](#setup-python-environment)
-  - [Install mise](#install-mise)
-  - [Install Development Tools](#install-development-tools)
-- [Usage](#usage)
-  - [Quick Setup (One-liner)](#quick-setup-one-liner)
-  - [Manual Download (Alternative Method)](#manual-download-alternative-method)
-  - [Install Pre-commit](#install-pre-commit)
-  - [Run Hooks](#run-hooks)
-- [Available Configurations](#available-configurations)
+- [Quick Start](#quick-start)
+- [Usage Methods](#usage-methods)
+- [Available Hooks](#available-hooks)
+- [Updating](#updating)
 
----
+## Quick Start
 
-## Prerequisites
-
-Before setting up the development environment, install the required system dependencies.
-
-### macOS
+Install pre-commit and the required tools in your project:
 
 ```bash
-# Install Xcode command line tools
-xcode-select --install
+# Install pre-commit
+pip install pre-commit
 
-# Install Homebrew (if not already installed)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# The hooks require these tools to be installed:
+# - For security: gitleaks, ripsecrets
+# - For Ansible: ansible-lint, yamllint
+# - For Python: flake8, black, isort
+# - For Docker: hadolint
+# - For Shell: shellcheck
+# Install them via your package manager (brew, apt, dnf) or mise
 
-# Install required packages
-brew install openssl readline sqlite3 xz zlib tcl-tk
+# Install the git hooks
+pre-commit install
 ```
 
-### Fedora/RHEL/CentOS
+## Usage Methods
+
+This repository can be used in **two ways**:
+
+### Method 1: As a Shared Pre-commit Repository
+
+Reference this repository directly in your project's `.pre-commit-config.yaml` file. This method keeps your project lightweight and always uses the hook definitions from this repository.
+
+**Example `.pre-commit-config.yaml` for Ansible projects:**
+
+```yaml
+repos:
+  # First, download the Ansible linter config files (run once)
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v1.0.0  # Use specific version tag
+    hooks:
+      - id: download-configs-ansible
+
+  # Then use the hooks from this shared repository
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: ansible-lint
+      - id: yamllint
+      - id: gitleaks
+      - id: flake8
+      - id: black
+```
+
+**Example for Terraform/OpenTofu projects:**
+
+```yaml
+repos:
+  # First, download the Terraform linter config files (run once)
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: download-configs-terraform
+
+  # Then use the hooks from this shared repository
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: terraform-fmt
+      - id: tflint
+      - id: gitleaks
+      - id: hadolint
+```
+
+**Available hook IDs:**
+
+**Configuration Management:**
+- `download-configs-ansible` - Downloads Ansible/YAML linter config files
+- `download-configs-terraform` - Downloads Terraform/OpenTofu linter config files
+
+**Security Scanning:**
+- `gitleaks` - Detects secrets in staged files (standard pre-commit usage)
+- `gitleaks-commit-history` - Scans entire git commit history for secrets
+- `gitleaks-current-directory` - Scans current directory for secrets
+- `ripsecrets` - Fast secret scanner for credentials
+
+**Ansible/YAML:**
+- `ansible-lint` - Lints Ansible playbooks for best practices
+- `yamllint` - Validates YAML syntax and formatting
+- `docsible` - Generates documentation for Ansible roles
+
+**Python:**
+- `flake8` - Python linting and style checking
+- `black` - Python code auto-formatting
+- `isort` - Python import sorting
+
+**Terraform/OpenTofu:**
+- `terraform-fmt` - Formats Terraform/OpenTofu files
+- `tflint` - Lints Terraform/OpenTofu code
+
+**Docker:**
+- `hadolint` - Lints Dockerfiles (strict)
+- `hadolint-with-ignores` - Lints Dockerfiles with common rules ignored
+
+**Shell:**
+- `shellcheck` - Finds bugs in shell scripts
+
+**Setup steps:**
 
 ```bash
-dnf install make gcc zlib-devel bzip2 bzip2-devel readline-devel \
-    sqlite sqlite-devel openssl-devel tk-devel libffi-devel \
-    xz-devel libuuid-devel gdbm-devel libnsl2-devel
+# 1. Create .pre-commit-config.yaml in your project (as shown above)
+
+# 2. Install pre-commit
+pip install pre-commit
+
+# 3. Install the hooks
+pre-commit install
+
+# 4. Download config files (one-time setup)
+# For Ansible projects:
+pre-commit run download-configs-ansible --hook-stage manual
+# For Terraform projects:
+pre-commit run download-configs-terraform --hook-stage manual
+
+# 5. Run all hooks
+pre-commit run --all-files
 ```
 
-### Ubuntu/Debian
+**Updating:**
 
 ```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils \
-    tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev -y
+# Update to latest version of this repository
+pre-commit autoupdate
+
+# Re-download config files if needed
+pre-commit run download-configs-ansible --hook-stage manual  # for Ansible
+pre-commit run download-configs-terraform --hook-stage manual  # for Terraform
 ```
 
----
+### Method 2: Download Configs Locally
 
-## Environment Setup
+Download configuration files and use them with local pre-commit hooks. This method copies the configs to your project.
 
-### Install pyenv
-
-Install pyenv to manage Python versions:
+**For Ansible projects:**
 
 ```bash
-curl https://pyenv.run | bash
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+```
+Reference as Shared Repository (Recommended)
+
+Create `.pre-commit-config.yaml` in your project:
+
+**For Ansible projects:**
+```yaml
+repos:
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: download-configs-ansible  # Run once to download configs
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: ansible-lint
+      - id: yamllint
+      - id: gitleaks
 ```
 
-Add pyenv to your shell profile:
+**For Terraform projects:**
+```yaml
+repos:
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: master
+    hooks:
+      - id: download-configs-terraform
+      - id: gitleaks-commit-history
+      - id: gitleaks-current-directory
 
-**For Bash:**
+  # OpenTofu
+  - repo: https://github.com/tofuutils/pre-commit-opentofu
+    rev: v2.2.1
+    hooks:
+      - id: tofu_fmt
+        name: tofu_fmt
+        description: Formats OpenTofu configuration files to ensure consistent style and readability
+      - id: tofu_validate
+        name: tofu_validate
+        description: Validates OpenTofu configuration files for syntax errors and internal consistency
+```
 
+**For Python projects:**
+```yaml
+repos:
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: v1.0.0
+    hooks:
+      - id: flake8
+      - id: black
+      - id: isort
+      - id: gitleaks
+```
+
+Run the setup:
 ```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+pre-commit install
+pre-commit run download-configs-ansible --hook-stage manual  # or download-configs-terraform
+pre-commit run --all-files
 ```
 
-**For Zsh:**
-
+Update hooks:
 ```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-echo 'eval "$(pyenv init -)"' >> ~/.zshrc
-```
-
-Reload your shell:
-
-```bash
-exec $SHELL
-```
-
-### Setup Python Environment
-
-Install Python 3.9.21 and create a virtual environment:
-
-```bash
-# Install Python 3.9.21
-pyenv install 3.9.21
-
-# Install pyenv-virtualenv plugin (if not already installed)
-git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
-
-# Create virtual environment
-pyenv virtualenv 3.9.21 venv
-
-# Activate virtual environment
-pyenv activate venv
-```
-
-### Install mise
-
-Install mise for managing development tools:
-
-```bash
-curl https://mise.run | sh
-```
-
-Add mise to your shell profile:
-
-**For Bash:**
-
-```bash
-echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
-```
-
-**For Zsh:**
-
-```bash
-echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
-```
-
-Reload your shell:
-
-```bash
-exec $SHELL
-```
-
-### Install Development Tools
-
-Clone this repository and install all required tools:
-
-```bash
-# Clone the repository
-git clone https://github.com/ginanck/shared-pre-commit-hooks.git
-cd shared-pre-commit-hooks
-
-# Trust the mise.toml file first
-mise trust
-
-# Install all tools from mise.toml
-mise install
-
-# Install Python packages
-pip install -r requirements.txt
-```
-
----
-
-## Usage
-
-### Quick Setup (One-liner)
-
-For automated setup of configurations and dependencies:
-
+pre-commit autoupdate
 **For Ansible projects:**
 
 ```bash
@@ -208,98 +226,6 @@ curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/mas
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform
 ```
-
-### Install Pre-commit
-
-Install pre-commit hooks in your repository:
-
-```bash
-# Install pre-commit hooks
-pre-commit install
-
-# Install commit message hooks (optional)
-pre-commit install --hook-type commit-msg
-```
-
-### Run Hooks
-
-Execute pre-commit hooks manually:
-
-```bash
-# Run all hooks on all files
-pre-commit run --all-files
-
-# Run specific hook on all files
-pre-commit run ansible-lint --all-files
-pre-commit run terraform_fmt --all-files
-
-# Run hooks on staged files only
-pre-commit run
-
-# Run specific hook on specific files
-pre-commit run flake8 --files path/to/file.py
-```
-
----
-
-## Available Configurations
-
-This repository provides pre-configured setups for different project types:
-
-### Ansible Configuration
-
-- **ansible-lint**: Linting for Ansible playbooks and roles
-- **yamllint**: YAML file validation
-- **trailing-whitespace**: Remove trailing whitespace
-- **end-of-file-fixer**: Ensure files end with newline
-
-### OpenTofu/Terraform Configuration
-
-- **terraform_fmt**: Format Terraform files
-- **terraform_validate**: Validate Terraform syntax
-- **terraform_docs**: Generate documentation
-- **tflint**: Terraform linting
-- **checkov**: Security scanning for Infrastructure as Code
-
-### Python Configuration
-
-Available in `configs/python/`:
-
-- **flake8**: Python linting (configured in `flake8.conf`)
-- **black**: Code formatting
-- **isort**: Import sorting
-- **pyproject.toml**: Modern Python project configuration
-
-### Custom Configurations
-
-You can also use the individual configuration files in the `configs/` directory:
-
-- `configs/ansible-lint.yml`
-- `configs/yamllint.yml`
-- `configs/flake8.conf`
-- `configs/pyproject.toml`
-
-### Pre-commit Configuration Exclusions
-
-To prevent pre-commit hooks from linting their own configuration files (which can cause circular validation issues), the following exclusions are built into the configurations:
-
-**Files excluded from linting:**
-
-- `.pre-commit-config.yaml` (main pre-commit configuration)
-- `.pre-commit-config*.yaml` (variant configurations)
-- `.pre-commit-hooks.yaml` (hook definitions)
-
-**Affected hooks:**
-
-- `ansible-lint`: Excluded via `exclude_paths` in `configs/ansible-lint.yml`
-- `yamllint`: Excluded via `ignore` pattern in `configs/yamllint.yml`
-- `trailing-whitespace`: Excluded via `exclude` pattern in example configurations
-
-This prevents common issues like:
-
-- YAML linting errors on pre-commit config formatting
-- Trailing whitespace checks modifying pre-commit configs
-- Ansible-lint attempting to parse non-Ansible YAML files
 
 ---
 
@@ -338,3 +264,61 @@ Feel free to submit issues and pull requests to improve these shared configurati
 ## License
 
 See [LICENSE](LICENSE) for details.
+s directly to your project:
+
+```bash
+# For Ansible
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+
+# For Terraform
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform
+
+# Install and run
+pre-commit install
+pre-commit run --all-files
+```
+
+Update configs:
+```bash## Available Hooks
+
+**Security**
+- `gitleaks` - Detect secrets in staged files
+- `gitleaks-commit-history` - Scan entire git history for secrets
+- `gitleaks-current-directory` - Scan current directory for secrets
+- `ripsecrets` - Fast credential scanner
+
+**Ansible/YAML**
+- `ansible-lint` - Lint Ansible playbooks
+- `yamllint` - Validate YAML files
+- `docsible` - Generate Ansible role documentation
+
+**Python**
+- `flake8` - Python linting
+- `black` - Code formatting
+- `isort` - Import sorting
+
+**Docker**
+- `hadolint` - Dockerfile linter (strict)
+- `hadolint-with-ignores` - Dockerfile linter (relaxed)
+
+**Shell**
+- `shellcheck` - Shell script linter
+
+**Configuration**
+- `download-configs-ansible` - Download Ansible linter configs
+- `download-configs-terraform` - Download Terraform linter config## Updating
+
+**Method 1 (Shared Repository):**
+```bash
+pre-commit autoupdate
+```
+
+**Method 2 (Local Configs):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+# or: bash -s terraform
+```
+
+## Contributing
+
+Submit issues and pull requests at [github.com/ginanck/shared-pre-commit-hooks](https://github.com/ginanck/shared-pre-commit-hooks)

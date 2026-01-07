@@ -3,27 +3,12 @@ default_stages: [pre-commit, manual]
 default_install_hook_types: [pre-commit, pre-push, commit-msg, prepare-commit-msg]
 
 repos:
-  # Local tools (must be installed in your environment)
-  - repo: local
+  - repo: https://github.com/ginanck/shared-pre-commit-hooks
+    rev: master
     hooks:
-      # ==================== SECURITY HOOKS ====================
+      - id: download-configs-terraform
       - id: gitleaks-commit-history
-        name: gitleaks-commit-history
-        description: Detects and prevents secrets like passwords, API keys, and tokens from being committed to the repository
-        entry: gitleaks
-        language: system
-        args: ["git", ".", "--verbose"]
-        pass_filenames: false
-        always_run: true
-
       - id: gitleaks-current-directory
-        name: gitleaks-current-directory
-        description: Detects and prevents secrets like passwords, API keys, and tokens from being committed to the repository
-        entry: gitleaks
-        language: system
-        args: ["dir", ".", "--verbose"]
-        pass_filenames: false
-        always_run: true
 
   # OpenTofu
   - repo: https://github.com/tofuutils/pre-commit-opentofu

@@ -1,0 +1,142 @@
+---
+# Shared Pre-commit Hooks
+# This file defines hooks that can be used from other repositories
+
+# ==================== CONFIGURATION SYNC HOOKS ====================
+- id: download-configs-ansible
+  name: Download Ansible Linter Configurations
+  description: Downloads Ansible/YAML linter configuration files and pre-commit config from this repository
+  entry: bash
+  language: system
+  args:
+    - "-c"
+    - "curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible"
+  pass_filenames: false
+  always_run: true
+  stages: [manual]
+
+- id: download-configs-terraform
+  name: Download Terraform Linter Configurations
+  description: Downloads Terraform/OpenTofu linter configuration files and pre-commit config from this repository
+  entry: bash
+  language: system
+  args:
+    - "-c"
+    - "curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform"
+  pass_filenames: false
+  always_run: true
+  stages: [manual]
+
+# ==================== SECURITY HOOKS ====================
+- id: gitleaks
+  name: gitleaks
+  description: Detects and prevents secrets in staged files (standard pre-commit usage)
+  entry: gitleaks
+  language: system
+  args: ["protect", "--staged", "--verbose"]
+  pass_filenames: false
+  always_run: true
+
+- id: gitleaks-commit-history
+  name: gitleaks-commit-history
+  description: Scans entire git commit history for secrets, passwords, API keys, and tokens
+  entry: gitleaks
+  language: system
+  args: ["git", ".", "--verbose"]
+  pass_filenames: false
+  always_run: true
+
+- id: gitleaks-current-directory
+  name: gitleaks-current-directory
+  description: Scans current directory for secrets, passwords, API keys, and tokens
+  entry: gitleaks
+  language: system
+  args: ["dir", ".", "--verbose"]
+  pass_filenames: false
+  always_run: true
+
+- id: ripsecrets
+  name: ripsecrets
+  description: Fast and accurate secret scanner that finds credentials and sensitive information in code
+  entry: ripsecrets
+  language: system
+  pass_filenames: false
+  always_run: true
+
+# ==================== ANSIBLE HOOKS ====================
+- id: ansible-lint
+  name: ansible-lint
+  description: Checks Ansible playbooks for best practices and behavior that could be improved
+  entry: ansible-lint
+  language: system
+  args: [-c, .config/ansible-lint.yml, -q]
+  files: \.(yaml|yml)$
+  exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|meta/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-.*\.yaml$|\.travis\.yml$)
+
+- id: yamllint
+  name: yamllint
+  description: Validates YAML files for syntax errors and enforces consistent formatting and style
+  entry: yamllint
+  language: system
+  args: [-c, .config/yamllint.yml]
+  files: \.(yaml|yml)$
+  exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|meta/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-.*\.yaml$|\.travis\.yml$)
+
+# ==================== PYTHON HOOKS ====================
+- id: flake8
+  name: flake8
+  description: Checks Python code for style guide enforcement, programming errors, and code complexity
+  entry: flake8
+  language: system
+  args: [--config, .config/flake8.conf]
+  files: \.py$
+
+- id: black
+  name: black
+  description: Automatically formats Python code to ensure consistent style and readability
+  entry: black
+  language: system
+  args: [--config, .config/pyproject.toml]
+  files: \.py$
+
+- id: isort
+  name: isort
+  description: Sorts and organizes Python imports automatically according to PEP 8 guidelines
+  entry: isort
+  language: system
+  types: [python]
+  args: [--profile, black]
+
+# ==================== DOCKER HOOKS ====================
+- id: hadolint
+  name: hadolint
+  description: Lints Dockerfiles to follow best practices and avoid common pitfalls in container builds
+  entry: hadolint
+  language: system
+  files: Dockerfile.*
+
+- id: hadolint-with-ignores
+  name: hadolint-with-ignores
+  description: Lints Dockerfiles with common rules ignored (DL3008, DL3009, DL3015, DL3033)
+  entry: hadolint
+  language: system
+  types: [dockerfile]
+  args: [--ignore, DL3008, --ignore, DL3009, --ignore, DL3015, --ignore, DL3033]
+
+# ==================== SHELL HOOKS ====================
+- id: shellcheck
+  name: shellcheck
+  description: Finds bugs and potential issues in shell scripts and suggests improvements
+  entry: shellcheck
+  language: system
+  types: [shell]
+
+# ==================== ANSIBLE DOCUMENTATION ====================
+- id: docsible
+  name: docsible
+  description: Automatically generates documentation for Ansible roles from meta/main.yml and task files
+  entry: docsible
+  language: system
+  args: ["--role", ".", "--md-template", ".config/docsible_template.md", "-nob", "-com", "-tl"]
+  pass_filenames: false
+  always_run: true
