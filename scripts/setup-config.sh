@@ -2,12 +2,11 @@
 
 # Setup script for shared pre-commit configuration files
 # This script downloads the latest configuration files from the repository
-# Usage: ./setup-config.sh [ansible|terraform|opentofu]
+# Usage: ./setup-config.sh [branch] [ansible|terraform|opentofu]
 
 set -euo pipefail
 
 # Configuration
-REPO_URL="https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master"
 CONFIG_DIR=".config"
 TEMP_DIR=$(mktemp -d)
 
@@ -41,7 +40,26 @@ cleanup() {
 trap cleanup EXIT
 
 # Parse command line arguments
-PROJECT_TYPE="${1:-}"
+BRANCH="${1:-}"
+PROJECT_TYPE="${2:-}"
+
+# Validate inputs
+if [[ -z "$BRANCH" ]] || [[ -z "$PROJECT_TYPE" ]]; then
+    error "❌ Please specify both branch and project type"
+    echo "Usage: $0 [branch] [ansible|terraform|opentofu]"
+    echo ""
+    echo "Examples:"
+    echo "  $0 master ansible    # Setup Ansible project from master branch"
+    echo "  $0 develop terraform # Setup Terraform project from develop branch"
+    echo "  $0 master opentofu   # Setup OpenTofu project from master branch"
+    exit 1
+fi
+
+# Set repository URL with proper format
+REPO_URL="https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/${BRANCH}"
+
+log "Using branch: $BRANCH"
+log "Repository URL: $REPO_URL"
 
 # Validate project type
 case "$PROJECT_TYPE" in
@@ -60,16 +78,6 @@ case "$PROJECT_TYPE" in
         log "Setting up Terraform/OpenTofu project configuration..."
         PRE_COMMIT_CONFIG="$REPO_URL/examples/pre-commit-config-opentofu.yaml"
         CONFIG_FILES=()  # No additional config files needed for Terraform
-        ;;
-    "")
-        error "❌ Please specify a project type: ansible, terraform, or opentofu"
-        echo "Usage: $0 [ansible|terraform|opentofu]"
-        echo ""
-        echo "Examples:"
-        echo "  $0 ansible    # Setup Ansible project with linter configs"
-        echo "  $0 terraform  # Setup Terraform project"
-        echo "  $0 opentofu   # Setup OpenTofu project"
-        exit 1
         ;;
     *)
         error "❌ Unknown project type: $PROJECT_TYPE"
