@@ -10,7 +10,7 @@
   language: system
   args:
     - "-c"
-    - "curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible"
+    - "curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/scripts/setup-config.sh | bash -s master ansible"
   pass_filenames: false
   always_run: true
   stages: [manual]
@@ -22,7 +22,7 @@
   language: system
   args:
     - "-c"
-    - "curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform"
+    - "curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/refs/heads/master/scripts/setup-config.sh | bash -s master terraform"
   pass_filenames: false
   always_run: true
   stages: [manual]
