@@ -150,7 +150,7 @@ Download configuration files and use them with local pre-commit hooks. This meth
 **For Ansible projects:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash master -s ansible
 ```
 Reference as Shared Repository (Recommended)
 
@@ -218,13 +218,13 @@ pre-commit autoupdate
 **For Ansible projects:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s master ansible
 ```
 
 **For Terraform/OpenTofu projects:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s master terraform
 ```
 
 ---
@@ -268,10 +268,10 @@ s directly to your project:
 
 ```bash
 # For Ansible
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s master ansible
 
 # For Terraform
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s terraform
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s master terraform
 
 # Install and run
 pre-commit install
@@ -315,7 +315,7 @@ pre-commit autoupdate
 
 **Method 2 (Local Configs):**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s ansible
+curl -fsSL https://raw.githubusercontent.com/ginanck/shared-pre-commit-hooks/master/scripts/setup-config.sh | bash -s master ansible
 # or: bash -s terraform
 ```
 
