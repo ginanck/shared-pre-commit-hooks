@@ -71,7 +71,7 @@
   language: system
   args: [-c, .config/ansible-lint.yml, -q]
   files: \.(yaml|yml)$
-  exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|meta/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-.*\.yaml$|\.travis\.yml$)
+  exclude: ^(\.github/.*|molecule/.*|meta/.*|tests/.*|requirements\.yml$|\.pre-commit-.*\.yaml$|\.travis\.yml$)
 
 - id: yamllint
   name: yamllint
@@ -80,7 +80,7 @@
   language: system
   args: [-c, .config/yamllint.yml]
   files: \.(yaml|yml)$
-  exclude: ^(\.github/.*|molecule/.*|roles/.*|collections/.*|meta/.*|todo/.*|ansible/.*|\.ansible/.*|tests/.*|requirements\.yml$|\.pre-commit-.*\.yaml$|\.travis\.yml$)
+  exclude: ^(\.github/.*|molecule/.*|meta/.*|tests/.*|requirements\.yml$|\.pre-commit-.*\.yaml$|\.travis\.yml$)
 
 # ==================== PYTHON HOOKS ====================
 - id: flake8
